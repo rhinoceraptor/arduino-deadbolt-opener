@@ -19,7 +19,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  Last update :
- *  https://github.com/hugokernel/OpenSCAD_ServoArms
+ *  
  *
  *  http://www.digitalspirit.org/
  */
@@ -50,7 +50,7 @@ SERVO_HEAD_CLEAR = 0.2;
  *  3. Tooth width
  */
 FUTABA_3F_SPLINE = [
-    [5.92, 4.5, 1.1, 2.5],
+    [5.82, 12, 3, 3],
     [23, 0.3, 0.7, 0.1]
 ];
 
@@ -136,8 +136,8 @@ module servo_arm(params, arms) {
     tooth_length = tooth[2];
     tooth_width = tooth[3];
 
-    arm_length = arms[0];
-    arm_count = arms[1];
+    arm_length = 0; //arms[0];
+    arm_count = 0; //arms[1];
 
     /**
      *  Servo arm
@@ -217,4 +217,57 @@ module demo() {
         servo_standard(20, 4);
 }
 
-demo();
+
+
+
+servo_axle_height = 5;
+servo_axle_diam = 10;
+
+screw_cap_height = 2;
+screw_cap_diam = 6;
+screw_shank_diam = 3;
+
+axle_diam = 13;
+axle_height = servo_axle_height + screw_cap_height + 2;
+
+deadbolt_short_len = 23;
+deadbolt_long_len = 32;
+deadbolt_width = 10;
+deadbolt_height = 10;
+
+thick_mult = 1.2;
+
+difference()
+{
+  union()
+  {
+    demo();
+    difference()
+    {
+      // Outer shell of deadbolt actuator, includes cap
+      translate([0, 0, (-1 * deadbolt_height * thick_mult) - 12])
+      linear_extrude(height = deadbolt_height * thick_mult, convexity = 10, twist = 0  )
+        polygon(points = [[0, deadbolt_width * thick_mult], [(deadbolt_long_len * thick_mult), 0], [0, (-1 * (deadbolt_width * thick_mult))], [(-1 * (deadbolt_short_len * thick_mult)), 0]], paths = [[0, 1, 2, 3, 0]]);
+
+      // Remove inner shell of deadbolt actuator
+      translate([0, 0, (-1 * deadbolt_height * thick_mult) - 12])
+      linear_extrude(height = deadbolt_height, convexity = 10, twist = 0)
+        polygon(points = [[0, deadbolt_width], [deadbolt_long_len, 0], [0, (-1 * deadbolt_width)], [-1 * deadbolt_short_len, 0]], paths = [[0, 1, 2, 3, 0]]);
+
+      // Cylinder for screw to fit through
+      translate([0, 0, -20])
+        cylinder(h = 20, r = (screw_shank_diam / 2));
+    }
+  // Fill in servo splines for screw cap
+  translate([0, 0, -12])
+  cylinder(h = 7, r = 4);
+  }
+  // screw hole
+  translate([0, 0, -30])
+    cylinder(h = 30, r = 1.5); 
+  // screw head capper
+  translate([0, 0, -17])
+    cylinder(h = 10, r = 2.5);
+
+}
+

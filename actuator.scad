@@ -1,10 +1,10 @@
 
-servo_axle_height = 10;
+servo_axle_height = 5;
 servo_axle_diam = 10;
 
-screw_cap_height = 1;
-screw_cap_diam = 4;
-screw_shank_diam = 2;
+screw_cap_height = 3;
+screw_cap_diam = 6;
+screw_shank_diam = 3;
 
 axle_diam = 13;
 axle_height = servo_axle_height + screw_cap_height + 2;
@@ -14,7 +14,7 @@ deadbolt_long_len = 30;
 deadbolt_width = 10;
 deadbolt_height = 10;
 
-thick_mult = 1.1;
+thick_mult = 1.2;
 
 
 difference()
